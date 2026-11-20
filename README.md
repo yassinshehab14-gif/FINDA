@@ -1,2 +1,380 @@
-# FINDA
-FINDA  - Find what you need, near you (MVP)
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="FINDA" />
+  <title>FINDA – Find what you need, near you</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --green: #16a34a;
+      --green-bg: #dcfce7;
+      --whatsapp: #128c7e;
+      --amber: #d97706;
+      --amber-bg: #fef3c7;
+      --red: #dc2626;
+      --red-bg: #fee2e2;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); padding-bottom: 40px; }
+    
+    .demo-banner {
+      background: var(--amber-bg);
+      color: #92400e;
+      font-size: 12px;
+      text-align: center;
+      padding: 8px 12px;
+      font-weight: 600;
+      border-bottom: 1px solid #fde68a;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f172a, #1e3a8a);
+      color: white;
+      padding: 20px 16px 24px;
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+    .brand-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .logo { font-size: 24px; font-weight: 800; letter-spacing: 0.5px; }
+    .logo span { color: #60a5fa; }
+    .location-pill {
+      background: rgba(255,255,255,0.15);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .tagline { font-size: 13px; color: #cbd5e1; margin: 0 0 16px; }
+
+    .search-box {
+      display: flex;
+      gap: 8px;
+      background: white;
+      padding: 6px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      padding: 8px 10px;
+      color: var(--text);
+    }
+    .cam-btn {
+      background: #eff6ff;
+      color: var(--primary);
+      border: none;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .container { padding: 16px; max-width: 600px; margin: 0 auto; }
+    .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px; }
+    .chip {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .chip.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: 600; }
+
+    .sort-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13px; color: var(--muted); }
+    select { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: white; font-size: 13px; }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .prod-title { font-size: 16px; font-weight: 700; margin: 0 0 4px; }
+    .store-info { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .price-tag { font-size: 18px; font-weight: 800; color: var(--primary); white-space: nowrap; }
+
+    .badges { display: flex; gap: 6px; margin: 12px 0; flex-wrap: wrap; }
+    .badge { font-size: 11px; padding: 4px 10px; border-radius: 8px; font-weight: 600; }
+    .b-green { background: var(--green-bg); color: var(--green); }
+    .b-amber { background: var(--amber-bg); color: var(--amber); }
+    .b-red { background: var(--red-bg); color: var(--red); }
+    .b-gray { background: #f1f5f9; color: #475569; }
+
+    .card-actions { display: flex; gap: 8px; }
+    .btn-reserve {
+      flex: 1.2;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 11px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-reserve:disabled { background: #cbd5e1; cursor: not-allowed; }
+    .btn-wa {
+      flex: 1;
+      background: #ecfdf5;
+      color: var(--whatsapp);
+      border: 1px solid #a7f3d0;
+      padding: 11px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .btn-wa-full {
+      width: 100%;
+      background: #16a34a;
+      color: white;
+      border: none;
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.6);
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+    }
+    .modal {
+      background: white;
+      width: 100%;
+      max-width: 500px;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 24px 20px 32px;
+    }
+    .modal h3 { margin: 0 0 8px; }
+    .modal input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin: 8px 0 14px;
+      font-size: 15px;
+    }
+    .modal-actions { display: flex; gap: 10px; }
+    .btn-cancel { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: white; font-weight: 600; }
+    .btn-confirm { flex: 2; padding: 12px; border-radius: 12px; border: none; background: var(--green); color: white; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <div class="demo-banner">
+    ⚠️ نسخة MVP تجريبية (القاهرة والجيزة - إلكترونيات) • الأسعار والمخزون بيانات اختبارية
+  </div>
+
+  <header>
+    <div class="brand-row">
+      <div class="logo">FINDA<span>.</span></div>
+      <div class="location-pill">📍 القاهرة والجيزة</div>
+    </div>
+    <p class="tagline">اكتب اسم المنتج أو صوّره، واعرف أقرب محل وأفضل سعر وتوافره فوراً.</p>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="ابحث عن سماعة، شاحن، بلايستيشن..." oninput="renderProducts()" />
+      <label class="cam-btn" title="بحث بالصورة">
+        📷
+        <input type="file" accept="image/*" capture="environment" style="display:none" onchange="handleImageSearch(event)" />
+      </label>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="chips" id="quickChips">
+      <div class="chip active" onclick="setQuickFilter('', this)">الكل</div>
+      <div class="chip" onclick="setQuickFilter('AirPods', this)">سماعات AirPods</div>
+      <div class="chip" onclick="setQuickFilter('Anker', this)">شواحن Anker</div>
+      <div class="chip" onclick="setQuickFilter('iPhone', this)">iPhone 15</div>
+      <div class="chip" onclick="setQuickFilter('JBL', this)">سماعات JBL</div>
+    </div>
+
+    <div class="sort-bar">
+      <span id="resultsCount">جاري التحميل...</span>
+      <select id="sortSelect" onchange="renderProducts()">
+        <option value="distance">الأقرب ليك</option>
+        <option value="price_asc">الأقل سعراً</option>
+        <option value="price_desc">الأعلى سعراً</option>
+      </select>
+    </div>
+
+    <div id="productList"></div>
+  </div>
+
+  <!-- Reservation Modal -->
+  <div class="modal-backdrop" id="reserveModal">
+    <div class="modal">
+      <h3 id="modalTitle">حجز المنتج</h3>
+      <p id="modalSubtitle" style="color:var(--muted); font-size:13px; margin:0 0 12px;"></p>
+      <label style="font-size:13px; font-weight:600;">اسمك</label>
+      <input type="text" id="custName" placeholder="مثال: ياسين شهاب" />
+      <label style="font-size:13px; font-weight:600;">رقم الموبايل لتأكيد الحجز</label>
+      <input type="tel" id="custPhone" placeholder="010xxxxxxxx" />
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">إلغاء</button>
+        <button class="btn-confirm" onclick="confirmReservation()">تأكيد الحجز لمدة ساعتين</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const inventory = [
+      { id: 1, name: "Apple AirPods Pro (2nd Gen) USB-C", store: "تريد لاين - سيتي ستارز", area: "مدينة نصر، القاهرة", distance: 1.8, price: 11450, stock: "available", stockText: "متوفر في الفرع (4 قطع)" },
+      { id: 2, name: "Apple AirPods Pro (2nd Gen) USB-C", store: "سويتش بلس - المعادي", area: "شارع 9، المعادي، القاهرة", distance: 4.2, price: 11200, stock: "low", stockText: "آخر قطعتين متبقيتين" },
+      { id: 3, name: "Apple AirPods Pro (2nd Gen) USB-C", store: "موبايل شوب - المهندسين", area: "جامعة الدول، الجيزة", distance: 6.5, price: 11600, stock: "out", stockText: "غير متوفر حالياً" },
+      { id: 4, name: "شاحن Anker 30W Nano 3 السريع", store: "دبي فون - الدقي", area: "شارع التحرير، الدقي، الجيزة", distance: 2.4, price: 1150, stock: "available", stockText: "متوفر (أكثر من 10 قطع)" },
+      { id: 5, name: "شاحن Anker 30W Nano 3 السريع", store: "تكنولوجي مول - مدينة نصر", area: "عباس العقاد، القاهرة", distance: 3.1, price: 1080, stock: "available", stockText: "متوفر في المحل" },
+      { id: 6, name: "سماعة JBL Tune 520BT لاسلكية", store: "بي تك - وسط البلد", area: "طلعت حرب، القاهرة", distance: 2.9, price: 2499, stock: "available", stockText: "متوفر (لون أسود وأزرق)" },
+      { id: 7, name: "iPhone 15 128GB - أسود", store: "آي ستور - الشيخ زايد", area: "أركان بلازا، الجيزة", distance: 12.0, price: 43500, stock: "low", stockText: "متوفر قطعة واحدة (عرض)" },
+      { id: 8, name: "iPhone 15 128GB - أسود", store: "سلكت - مصر الجديدة", area: "الكوربة، القاهرة", distance: 5.0, price: 42900, stock: "available", stockText: "متوفر بضمان محلي" }
+    ];
+
+    let selectedItem = null;
+
+    function buildWhatsAppLink(productName, storeName = "أقرب محل في القاهرة والجيزة") {
+      const msg = `أهلاً بك 👋 عميل قريب من (${storeName}) بيسأل عبر FINDA عن توفر منتج: "${productName}".\nهل المنتج متوفر حالياً وبكام؟`;
+      return `https://wa.me/?text=${encodeURIComponent(msg)}`;
+    }
+
+    function setQuickFilter(term, el) {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('searchInput').value = term;
+      renderProducts();
+    }
+
+    function handleImageSearch(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      alert("📷 جاري تحليل صورة المنتج (محاكاة MVP)... تم التعرف على: Apple AirPods Pro!");
+      document.getElementById('searchInput').value = "AirPods";
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const rawQ = document.getElementById('searchInput').value.trim();
+      const q = rawQ.toLowerCase();
+      const sort = document.getElementById('sortSelect').value;
+
+      let filtered = inventory.filter(item =>
+        item.name.toLowerCase().includes(q) ||
+        item.store.toLowerCase().includes(q) ||
+        item.area.toLowerCase().includes(q)
+      );
+
+      if (sort === 'distance') filtered.sort((a, b) => a.distance - b.distance);
+      if (sort === 'price_asc') filtered.sort((a, b) => a.price - b.price);
+      if (sort === 'price_desc') filtered.sort((a, b) => b.price - a.price);
+
+      document.getElementById('resultsCount').innerText = `عدد النتائج: ${filtered.length}`;
+
+      const list = document.getElementById('productList');
+      if (filtered.length === 0) {
+        const waUrl = buildWhatsAppLink(rawQ);
+        list.innerHTML = `
+          <div class="card" style="text-align:center; padding: 24px 16px;">
+            <div style="font-size:32px; margin-bottom:8px;">🔍</div>
+            <h4 style="margin:0 0 6px;">"${rawQ}" مش مسجل في القائمة لسه</h4>
+            <p style="color:var(--muted); font-size:13px; margin:0 0 12px;">
+              ولا يهمك! تقدر تبعت سؤالك فوراً لأقرب محلات الإلكترونيات في القاهرة والجيزة عبر واتساب وتعرف التوافر والسعر في ثواني.
+            </p>
+            <a href="${waUrl}" target="_blank" class="btn-wa-full">
+              💬 اسأل أقرب محل عبر واتساب عن "${rawQ}"
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = filtered.map(item => {
+        const badgeClass = item.stock === 'available' ? 'b-green' : (item.stock === 'low' ? 'b-amber' : 'b-red');
+        const waUrl = buildWhatsAppLink(item.name, item.store);
+        return `
+          <div class="card">
+            <div class="card-top">
+              <div>
+                <h4 class="prod-title">${item.name}</h4>
+                <div class="store-info">🏪 ${item.store} • 📍 ${item.area}</div>
+              </div>
+              <div class="price-tag">${item.price.toLocaleString()} ج.م</div>
+            </div>
+            <div class="badges">
+              <span class="badge b-gray">🚗 يبعد ${item.distance} كم</span>
+              <span class="badge ${badgeClass}">${item.stockText}</span>
+              <span class="badge b-gray">🧪 بيانات تجريبية</span>
+            </div>
+            <div class="card-actions">
+              <button class="btn-reserve" ${item.stock === 'out' ? 'disabled' : ''} onclick="openModal(${item.id})">
+                ${item.stock === 'out' ? 'غير متاح' : 'احجز في المحل'}
+              </button>
+              <a href="${waUrl}" target="_blank" class="btn-wa">
+                💬 اسأل واتساب
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openModal(id) {
+      selectedItem = inventory.find(i => i.id === id);
+      document.getElementById('modalTitle').innerText = `حجز: ${selectedItem.name}`;
+      document.getElementById('modalSubtitle').innerText = `${selectedItem.store} (${selectedItem.price.toLocaleString()} ج.م)`;
+      document.getElementById('reserveModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('reserveModal').style.display = 'none';
+    }
+
+    function confirmReservation() {
+      const name = document.getElementById('custName').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      if (!name || !phone) {
+        alert("من فضلك اكتب اسمك ورقم موبايلك لتأكيد الحجز.");
+        return;
+      }
+      const code = "FND-" + Math.floor(1000 + Math.random() * 9000);
+      closeModal();
+      alert(`✅ تم تسجيل طلب الحجز التجريبي بنجاح!\n\nرقم الحجز: ${code}\nالمنتج: ${selectedItem.name}\nالمحل: ${selectedItem.store}\nالحجز ساري لمدة ساعتين.`);
+    }
+
+    renderProducts();
+  </script>
+</body>
+</html>
